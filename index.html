@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Academy — Portfolio Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-container">
+
+    <header class="app-header">
+      <div class="logo">Data Academy</div>
+      <nav class="progress-bar" aria-label="Steps">
+        <div class="progress-step active" data-step="1">
+          <span class="step-number">1</span>
+          <span class="step-label">Connect GitHub</span>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" data-step="2">
+          <span class="step-number">2</span>
+          <span class="step-label">Your Profile</span>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" data-step="3">
+          <span class="step-number">3</span>
+          <span class="step-label">Projects</span>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" data-step="4">
+          <span class="step-number">4</span>
+          <span class="step-label">Review & Deploy</span>
+        </div>
+      </nav>
+    </header>
+
+    <main class="step-container">
+
+      <!-- STEP 1: GitHub Auth -->
+      <section id="step-1" class="step" aria-label="Connect GitHub">
+        <div class="step-content">
+          <h1 class="step-title">Connect Your GitHub Account</h1>
+          <p class="step-description">
+            We use a Personal Access Token to create your portfolio repository.
+            Your token is only used during this session and is never stored.
+          </p>
+          <details class="token-instructions">
+            <summary>How to create a GitHub token (click to expand)</summary>
+            <ol>
+              <li>Go to <a href="https://github.com/settings/tokens/new" target="_blank" rel="noreferrer">github.com/settings/tokens/new</a></li>
+              <li>Give it a name like <strong>Data Academy Portfolio</strong></li>
+              <li>Set expiration to <strong>7 days</strong></li>
+              <li>Under <em>Select scopes</em>, tick <strong>repo</strong></li>
+              <li>Click <strong>Generate token</strong> and copy it immediately</li>
+            </ol>
+          </details>
+          <form id="form-auth" class="form" novalidate>
+            <div class="field-group">
+              <label for="pat-input" class="field-label">
+                GitHub Personal Access Token <span class="required" aria-hidden="true">*</span>
+              </label>
+              <input type="password" id="pat-input" name="pat" class="field-input"
+                placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false" required />
+              <p class="field-hint">Starts with <code>ghp_</code> or <code>github_pat_</code></p>
+              <p class="field-error hidden" id="pat-error" role="alert"></p>
+            </div>
+            <div class="auth-user-card hidden" id="auth-user-card">
+              <img id="auth-avatar" src="" alt="" class="auth-avatar" />
+              <div>
+                <p class="auth-name" id="auth-username"></p>
+                <p class="auth-sub">Connected</p>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-wide" id="btn-verify-token">
+              <span class="btn-text">Verify Token</span>
+              <span class="btn-spinner hidden" aria-hidden="true"></span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- STEP 2: Profile -->
+      <section id="step-2" class="step hidden" aria-label="Your Profile">
+        <div class="step-content">
+          <h1 class="step-title">Your Profile</h1>
+          <p class="step-description">This information appears on your portfolio's homepage and contact section.</p>
+          <form id="form-profile" class="form" novalidate>
+            <div class="form-grid">
+              <div class="field-group">
+                <label for="profile-name" class="field-label">Full Name <span class="required" aria-hidden="true">*</span></label>
+                <input type="text" id="profile-name" name="name" class="field-input" placeholder="Jane Smith" required />
+                <p class="field-error hidden" id="profile-name-error" role="alert"></p>
+              </div>
+              <div class="field-group">
+                <label for="profile-role" class="field-label">Job Title <span class="required" aria-hidden="true">*</span></label>
+                <input type="text" id="profile-role" name="role" class="field-input" placeholder="Data Analyst" required />
+                <p class="field-error hidden" id="profile-role-error" role="alert"></p>
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="profile-tagline" class="field-label">Tagline / Bio <span class="required" aria-hidden="true">*</span></label>
+              <textarea id="profile-tagline" name="tagline" class="field-input field-textarea" rows="3"
+                placeholder="Turning raw data into clear, actionable insight with SQL, Power BI, and Python." required></textarea>
+              <p class="field-hint">1–2 sentences. Shown at the top of your portfolio.</p>
+              <p class="field-error hidden" id="profile-tagline-error" role="alert"></p>
+            </div>
+            <div class="form-grid">
+              <div class="field-group">
+                <label for="profile-email" class="field-label">Email</label>
+                <input type="email" id="profile-email" name="email" class="field-input" placeholder="jane@example.com" />
+                <p class="field-error hidden" id="profile-email-error" role="alert"></p>
+              </div>
+              <div class="field-group">
+                <label for="profile-phone" class="field-label">Phone</label>
+                <input type="tel" id="profile-phone" name="phone" class="field-input" placeholder="+1 (555) 000-0000" />
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="field-group">
+                <label for="profile-linkedin" class="field-label">LinkedIn URL</label>
+                <input type="url" id="profile-linkedin" name="linkedin" class="field-input"
+                  placeholder="https://www.linkedin.com/in/yourprofile" />
+                <p class="field-error hidden" id="profile-linkedin-error" role="alert"></p>
+              </div>
+              <div class="field-group">
+                <label for="profile-github" class="field-label">GitHub Profile URL</label>
+                <input type="url" id="profile-github" name="github" class="field-input"
+                  placeholder="https://github.com/yourusername" />
+                <p class="field-error hidden" id="profile-github-error" role="alert"></p>
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="profile-photo" class="field-label">Profile Photo URL</label>
+              <input type="url" id="profile-photo" name="photoUrl" class="field-input"
+                placeholder="https://example.com/your-photo.jpg" />
+              <p class="field-hint">Direct link to a .jpg or .png. Leave blank to use a placeholder — you can upload a photo to your repo after deployment.</p>
+            </div>
+            <div class="field-group">
+              <label for="profile-availability" class="field-label">Availability</label>
+              <input type="text" id="profile-availability" name="availability" class="field-input"
+                placeholder="Available for contract & full-time roles" />
+            </div>
+            <div class="field-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="profile-open-to-work" name="openToWork" checked />
+                Show "Open to Work" badge
+              </label>
+            </div>
+            <div class="step-actions">
+              <button type="button" class="btn btn-ghost" id="btn-back-to-1">Back</button>
+              <button type="submit" class="btn btn-primary">Next: Add Projects</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- STEP 3: Projects -->
+      <section id="step-3" class="step hidden" aria-label="Your Projects">
+        <div class="step-content">
+          <h1 class="step-title">Your Projects</h1>
+          <p class="step-description">Add up to 6 projects. You can always add more later by editing your repository.</p>
+          <div id="projects-list" class="projects-list"></div>
+          <button type="button" class="btn btn-outline btn-wide" id="btn-add-project">+ Add Project</button>
+          <div class="step-actions">
+            <button type="button" class="btn btn-ghost" id="btn-back-to-2">Back</button>
+            <button type="button" class="btn btn-primary" id="btn-to-step-4">Next: Review & Deploy</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 4: Review & Deploy -->
+      <section id="step-4" class="step hidden" aria-label="Review and Deploy">
+        <div class="step-content">
+          <h1 class="step-title">Review & Deploy</h1>
+          <p class="step-description">Check your details below, then click Deploy to create your portfolio repository.</p>
+          <div id="review-panel" class="review-panel"></div>
+          <div class="step-actions">
+            <button type="button" class="btn btn-ghost" id="btn-back-to-3">Back</button>
+            <button type="button" class="btn btn-primary btn-wide" id="btn-deploy">
+              <span class="btn-text">Create My Portfolio</span>
+              <span class="btn-spinner hidden" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUCCESS SCREEN -->
+      <section id="screen-success" class="step hidden" aria-label="Success">
+        <div class="step-content success-content">
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <h1 class="step-title">Your Portfolio is Ready!</h1>
+          <p class="step-description">Your repository has been created. Follow the steps below to go live.</p>
+          <div class="success-card">
+            <h2>Your Repository</h2>
+            <a id="success-repo-url" href="#" target="_blank" rel="noreferrer" class="success-link"></a>
+          </div>
+          <div class="success-card">
+            <h2>Deploy to Vercel (free)</h2>
+            <ol class="deploy-steps">
+              <li>Go to <a href="https://vercel.com/new" target="_blank" rel="noreferrer">vercel.com/new</a> and sign in with GitHub</li>
+              <li>Click <strong>Import</strong> next to your new repository</li>
+              <li>Leave all settings as defaults — click <strong>Deploy</strong></li>
+              <li>Your portfolio is live at a <code>.vercel.app</code> URL within 60 seconds</li>
+            </ol>
+          </div>
+          <div class="success-card">
+            <h2>Adding Your Profile Photo</h2>
+            <p>On GitHub, open your repo → <code>public/</code> folder → upload your photo file → name it <code>ando-headshot.jpeg</code> (or update the path in <code>lib/portfolio-config.json</code>). Vercel auto-deploys on every commit.</p>
+          </div>
+          <div class="success-card">
+            <h2>Editing Your Portfolio Later</h2>
+            <p>Open <code>lib/portfolio-config.json</code> in your GitHub repo and edit the values directly. Vercel auto-deploys every change within 60 seconds.</p>
+            <p class="mt-sm">For bigger edits, paste the relevant section into Claude and describe what you want.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <div id="toast" class="toast hidden" role="alert" aria-live="assertive">
+      <span id="toast-message"></span>
+      <button id="toast-close" class="toast-close" aria-label="Dismiss">×</button>
+    </div>
+
+  </div>
+
+  <!-- Project card template — hidden, cloned by JS -->
+  <template id="project-card-template">
+    <div class="project-card">
+      <div class="project-card-header">
+        <h3 class="project-card-title">Project <span class="project-number"></span></h3>
+        <button type="button" class="btn-remove-project" aria-label="Remove project">×</button>
+      </div>
+      <form class="form project-form" novalidate>
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label">Project Title <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" name="title" class="field-input" placeholder="Energy Plus KPI Dashboard" required />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Company / Client</label>
+            <input type="text" name="company" class="field-input" placeholder="Energy Plus" />
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label">Industry</label>
+            <input type="text" name="industry" class="field-input" placeholder="Energy / Utilities" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Duration</label>
+            <input type="text" name="duration" class="field-input" placeholder="4 weeks" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Summary <span class="required" aria-hidden="true">*</span></label>
+          <textarea name="summary" class="field-input field-textarea" rows="2"
+            placeholder="One sentence describing the project and its business value." required></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">The Challenge</label>
+          <textarea name="challenge" class="field-input field-textarea" rows="3"
+            placeholder="What problem were you solving? What was the business context?"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">What I Built</label>
+          <textarea name="whatIBuilt" class="field-input field-textarea" rows="3"
+            placeholder="Describe the solution you designed and delivered."></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">The Outcome</label>
+          <textarea name="outcome" class="field-input field-textarea" rows="2"
+            placeholder="What changed for the business after your work?"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Tools Used</label>
+          <input type="text" name="tools" class="field-input"
+            placeholder="SQL, Power BI, DAX (comma-separated)" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">GitHub Link</label>
+          <input type="url" name="githubUrl" class="field-input" placeholder="https://github.com/..." />
+        </div>
+      </form>
+    </div>
+  </template>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
