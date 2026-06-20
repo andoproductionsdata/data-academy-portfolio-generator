@@ -1,5 +1,5 @@
 const API = "https://api.github.com"
-const TEMPLATE_OWNER = "YOUR_GITHUB_USERNAME"          // ← update after pushing template repo to GitHub
+const TEMPLATE_OWNER = "andoproductionsdata"
 const TEMPLATE_REPO  = "data-academy-portfolio-template"
 
 function headers(pat) {
