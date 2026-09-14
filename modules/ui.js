@@ -54,9 +54,9 @@ export function clearFormErrors(form) {
   form.querySelectorAll(".field-input.invalid").forEach(el => el.classList.remove("invalid"))
 }
 
-export function renderReviewPanel(state) {
-  const { profile, projects } = state
-  const repoName = generateRepoName(profile.name)
+export function renderReviewPanel(state, repoNameOverride = null) {
+  const { profile, workExperience, projects, certifications, selectedSkills } = state
+  const repoName = repoNameOverride || generateRepoName(profile.name)
 
   document.getElementById("review-panel").innerHTML = `
     <div class="review-section">
@@ -71,12 +71,25 @@ export function renderReviewPanel(state) {
       <span class="review-label">Tagline</span>
       <span class="review-value">${profile.tagline}</span>
     </div>
+    ${profile.location ? `<div class="review-section"><span class="review-label">Location</span><span class="review-value">${profile.location}</span></div>` : ""}
     ${profile.email ? `<div class="review-section"><span class="review-label">Email</span><span class="review-value">${profile.email}</span></div>` : ""}
     ${profile.linkedin ? `<div class="review-section"><span class="review-label">LinkedIn</span><span class="review-value">${profile.linkedin}</span></div>` : ""}
     ${profile.github ? `<div class="review-section"><span class="review-label">GitHub</span><span class="review-value">${profile.github}</span></div>` : ""}
     <div class="review-section">
+      <span class="review-label">Skills</span>
+      <span class="review-value">${selectedSkills.length === 0 ? "None selected" : selectedSkills.join(", ")}</span>
+    </div>
+    <div class="review-section">
+      <span class="review-label">Work experience</span>
+      <span class="review-value">${workExperience.length === 0 ? "None added" : workExperience.map(j => `${j.title} at ${j.company}`).join(", ")}</span>
+    </div>
+    <div class="review-section">
       <span class="review-label">Projects</span>
       <span class="review-value">${projects.length === 0 ? "None added" : projects.map(p => p.title || "Untitled").join(", ")}</span>
+    </div>
+    <div class="review-section">
+      <span class="review-label">Certifications</span>
+      <span class="review-value">${certifications.length === 0 ? "None added" : certifications.map(c => c.name).join(", ")}</span>
     </div>
     <div class="review-section">
       <span class="review-label">Repository name</span>
@@ -87,6 +100,12 @@ export function renderReviewPanel(state) {
 
 export function renderSuccessScreen(repoUrl) {
   const linkEl = document.getElementById("success-repo-url")
+  linkEl.href = repoUrl
+  linkEl.textContent = repoUrl
+}
+
+export function renderEditSuccessScreen(repoUrl) {
+  const linkEl = document.getElementById("edit-success-repo-url")
   linkEl.href = repoUrl
   linkEl.textContent = repoUrl
 }

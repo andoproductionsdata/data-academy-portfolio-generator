@@ -1,8 +1,8 @@
-export function goToStep(stepNumber) {
+export function goToStep(stepNumber, screenId = "screen-success") {
   document.querySelectorAll(".step").forEach(el => el.classList.add("hidden"))
 
   if (stepNumber === 0) {
-    document.getElementById("screen-success").classList.remove("hidden")
+    document.getElementById(screenId).classList.remove("hidden")
     document.querySelectorAll(".progress-step").forEach(el => {
       el.classList.remove("active")
       el.classList.add("completed")

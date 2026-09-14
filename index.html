@@ -24,11 +24,21 @@
         <div class="progress-connector"></div>
         <div class="progress-step" data-step="3">
           <span class="step-number">3</span>
-          <span class="step-label">Projects</span>
+          <span class="step-label">Experience</span>
         </div>
         <div class="progress-connector"></div>
         <div class="progress-step" data-step="4">
           <span class="step-number">4</span>
+          <span class="step-label">Projects</span>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" data-step="5">
+          <span class="step-number">5</span>
+          <span class="step-label">Certifications</span>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" data-step="6">
+          <span class="step-number">6</span>
           <span class="step-label">Review & Deploy</span>
         </div>
       </nav>
@@ -40,18 +50,52 @@
       <section id="step-1" class="step" aria-label="Connect GitHub">
         <div class="step-content">
           <h1 class="step-title">Connect Your GitHub Account</h1>
-          <p class="step-description">
+
+          <div class="mode-toggle" role="group" aria-label="Mode">
+            <button type="button" class="mode-btn active" id="btn-mode-generate" aria-pressed="true">
+              Generate Portfolio
+            </button>
+            <button type="button" class="mode-btn" id="btn-mode-edit" aria-pressed="false">
+              Edit Portfolio
+            </button>
+          </div>
+
+          <p class="step-description" id="step-1-description">
             We use a Personal Access Token to create your portfolio repository.
             Your token is only used during this session and is never stored.
           </p>
-          <details class="token-instructions">
-            <summary>How to create a GitHub token (click to expand)</summary>
+          <details class="token-instructions" open>
+            <summary>How to get your GitHub token (click to collapse)</summary>
             <ol>
-              <li>Go to <a href="https://github.com/settings/tokens/new" target="_blank" rel="noreferrer">github.com/settings/tokens/new</a></li>
-              <li>Give it a name like <strong>Data Academy Portfolio</strong></li>
-              <li>Set expiration to <strong>7 days</strong></li>
-              <li>Under <em>Select scopes</em>, tick <strong>repo</strong></li>
-              <li>Click <strong>Generate token</strong> and copy it immediately</li>
+              <li>
+                <strong>Log in or create a free GitHub account</strong> —
+                go to <a href="https://github.com" target="_blank" rel="noreferrer">github.com</a>
+                and sign in, or click <strong>Sign up</strong> if you don't have an account yet.
+              </li>
+              <li>
+                Once logged in, click your <strong>profile photo</strong> (top-right corner)
+                and select <strong>Settings</strong>.
+              </li>
+              <li>
+                Scroll to the bottom of the left sidebar and click
+                <strong>Developer settings</strong>.
+              </li>
+              <li>
+                Click <strong>Personal access tokens</strong> → <strong>Tokens (classic)</strong>.
+                <br /><em>Important: you must use a <strong>classic</strong> token, not a fine-grained token.</em>
+              </li>
+              <li>
+                Click <strong>Generate new token</strong> → <strong>Generate new token (classic)</strong>.
+                Or use this direct link:
+                <a href="https://github.com/settings/tokens/new" target="_blank" rel="noreferrer">github.com/settings/tokens/new</a>.
+              </li>
+              <li>Give it a name like <strong>Data Academy Portfolio</strong>.</li>
+              <li>Set expiration to <strong>7 days</strong>.</li>
+              <li>
+                Under <em>Select scopes</em>, tick <strong>repo</strong> — this is required.
+                Without it your portfolio cannot be created.
+              </li>
+              <li>Click <strong>Generate token</strong> and <strong>copy it immediately</strong> — it won't be shown again.</li>
             </ol>
           </details>
           <form id="form-auth" class="form" novalidate>
@@ -63,6 +107,15 @@
                 placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false" required />
               <p class="field-hint">Starts with <code>ghp_</code> or <code>github_pat_</code></p>
               <p class="field-error hidden" id="pat-error" role="alert"></p>
+            </div>
+            <div class="field-group hidden" id="repo-name-group">
+              <label for="repo-name-input" class="field-label">
+                Portfolio Repo Name <span class="required" aria-hidden="true">*</span>
+              </label>
+              <input type="text" id="repo-name-input" name="repoName" class="field-input"
+                placeholder="jane-smith-data-portfolio" autocomplete="off" spellcheck="false" />
+              <p class="field-hint">The name of the GitHub repository created when you first generated your portfolio.</p>
+              <p class="field-error hidden" id="repo-name-error" role="alert"></p>
             </div>
             <div class="auth-user-card hidden" id="auth-user-card">
               <img id="auth-avatar" src="" alt="" class="auth-avatar" />
@@ -85,17 +138,10 @@
           <h1 class="step-title">Your Profile</h1>
           <p class="step-description">This information appears on your portfolio's homepage and contact section.</p>
           <form id="form-profile" class="form" novalidate>
-            <div class="form-grid">
-              <div class="field-group">
-                <label for="profile-name" class="field-label">Full Name <span class="required" aria-hidden="true">*</span></label>
-                <input type="text" id="profile-name" name="name" class="field-input" placeholder="Jane Smith" required />
-                <p class="field-error hidden" id="profile-name-error" role="alert"></p>
-              </div>
-              <div class="field-group">
-                <label for="profile-role" class="field-label">Job Title <span class="required" aria-hidden="true">*</span></label>
-                <input type="text" id="profile-role" name="role" class="field-input" placeholder="Data Analyst" required />
-                <p class="field-error hidden" id="profile-role-error" role="alert"></p>
-              </div>
+            <div class="field-group">
+              <label for="profile-name" class="field-label">Full Name <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="profile-name" name="name" class="field-input" placeholder="Jane Smith" required />
+              <p class="field-error hidden" id="profile-name-error" role="alert"></p>
             </div>
             <div class="field-group">
               <label for="profile-tagline" class="field-label">Tagline / Bio <span class="required" aria-hidden="true">*</span></label>
@@ -115,6 +161,11 @@
                 <input type="tel" id="profile-phone" name="phone" class="field-input" placeholder="+1 (555) 000-0000" />
               </div>
             </div>
+            <div class="field-group">
+              <label for="profile-location" class="field-label">Location</label>
+              <input type="text" id="profile-location" name="location" class="field-input" placeholder="Melbourne, Australia" />
+              <p class="field-hint">Shown next to your contact details on the portfolio.</p>
+            </div>
             <div class="form-grid">
               <div class="field-group">
                 <label for="profile-linkedin" class="field-label">LinkedIn URL</label>
@@ -130,10 +181,60 @@
               </div>
             </div>
             <div class="field-group">
-              <label for="profile-photo" class="field-label">Profile Photo URL</label>
-              <input type="url" id="profile-photo" name="photoUrl" class="field-input"
-                placeholder="https://example.com/your-photo.jpg" />
-              <p class="field-hint">Direct link to a .jpg or .png. Leave blank to use a placeholder — you can upload a photo to your repo after deployment.</p>
+              <label for="profile-bio" class="field-label">About Me</label>
+              <textarea id="profile-bio" name="bio" class="field-input field-textarea" rows="3"
+                placeholder="As a Data Analyst with X years of experience, I specialise in SQL and Power BI to drive data-driven decision-making."></textarea>
+              <p class="field-hint">1–3 sentences about your background. Shown in the About section.</p>
+              <p class="field-error hidden" id="profile-bio-error" role="alert"></p>
+            </div>
+            <div class="form-grid">
+              <div class="field-group">
+                <label for="profile-focus" class="field-label">Focus Area</label>
+                <input type="text" id="profile-focus" name="focus" class="field-input" placeholder="Data Analytics & Business Intelligence" />
+                <p class="field-hint">Your primary specialisation.</p>
+              </div>
+              <div class="field-group">
+                <label for="profile-core-stack" class="field-label">Core Stack</label>
+                <input type="text" id="profile-core-stack" name="coreStack" class="field-input" placeholder="SQL · Power BI · Python" />
+                <p class="field-hint">Your main tools, separated by ·</p>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Resume / CV</label>
+              <div class="photo-upload-area">
+                <div class="photo-upload-row">
+                  <label for="profile-resume-file" class="btn btn-outline photo-upload-btn">Upload Resume</label>
+                  <input type="file" id="profile-resume-file" accept="application/pdf" class="hidden-file-input" />
+                  <span id="resume-filename" class="photo-filename">No file chosen</span>
+                </div>
+                <p class="field-hint">PDF only. Students can click "Download Resume" on the live portfolio to download it.</p>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Technical Skills</label>
+              <p class="field-hint" style="margin-bottom:0.5rem">Tick the skills to show on your portfolio. You can edit these later.</p>
+              <div class="skills-grid" id="skills-checkboxes"></div>
+              <div class="custom-skill-form">
+                <input type="text" id="custom-skill-input" class="field-input" placeholder="Skill name (e.g. Looker)" />
+                <input type="text" id="custom-skill-description" class="field-input" placeholder="Short description (optional — e.g. Pivots, VLOOKUP, Power Query)" />
+                <div class="custom-skill-row">
+                  <label for="custom-skill-icon-file" class="btn btn-outline photo-upload-btn">Choose Icon</label>
+                  <input type="file" id="custom-skill-icon-file" accept="image/*" class="hidden-file-input" />
+                  <img id="custom-skill-icon-preview" src="" alt="" class="skill-icon-thumb hidden" />
+                  <button type="button" class="btn btn-outline" id="btn-add-skill">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Profile Photo</label>
+              <div class="photo-upload-area">
+                <div class="photo-upload-row">
+                  <label for="profile-photo-file" class="btn btn-outline photo-upload-btn">Choose Photo</label>
+                  <input type="file" id="profile-photo-file" accept="image/jpeg,image/png,image/webp" class="hidden-file-input" />
+                  <img id="photo-preview" src="" alt="" class="photo-preview-thumb hidden" />
+                </div>
+                <p class="field-hint">JPG or PNG, max 5 MB. Your photo will be uploaded to your portfolio automatically.</p>
+              </div>
             </div>
             <div class="field-group">
               <label for="profile-availability" class="field-label">Availability</label>
@@ -148,34 +249,62 @@
             </div>
             <div class="step-actions">
               <button type="button" class="btn btn-ghost" id="btn-back-to-1">Back</button>
-              <button type="submit" class="btn btn-primary">Next: Add Projects</button>
+              <button type="submit" class="btn btn-primary">Next: Work Experience</button>
             </div>
           </form>
         </div>
       </section>
 
-      <!-- STEP 3: Projects -->
-      <section id="step-3" class="step hidden" aria-label="Your Projects">
+      <!-- STEP 3: Work Experience -->
+      <section id="step-3" class="step hidden" aria-label="Work Experience">
+        <div class="step-content">
+          <h1 class="step-title">Work Experience</h1>
+          <p class="step-description">Add your work history, most recent job first. You can always edit this later in your repository.</p>
+          <div id="jobs-list" class="projects-list"></div>
+          <button type="button" class="btn btn-outline btn-wide" id="btn-add-job">+ Add Job</button>
+          <div class="step-actions">
+            <button type="button" class="btn btn-ghost" id="btn-back-to-2">Back</button>
+            <button type="button" class="btn btn-primary" id="btn-to-step-4">Next: Add Projects</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 4: Projects -->
+      <section id="step-4" class="step hidden" aria-label="Your Projects">
         <div class="step-content">
           <h1 class="step-title">Your Projects</h1>
           <p class="step-description">Add up to 6 projects. You can always add more later by editing your repository.</p>
           <div id="projects-list" class="projects-list"></div>
           <button type="button" class="btn btn-outline btn-wide" id="btn-add-project">+ Add Project</button>
           <div class="step-actions">
-            <button type="button" class="btn btn-ghost" id="btn-back-to-2">Back</button>
-            <button type="button" class="btn btn-primary" id="btn-to-step-4">Next: Review & Deploy</button>
+            <button type="button" class="btn btn-ghost" id="btn-back-to-3">Back</button>
+            <button type="button" class="btn btn-primary" id="btn-to-step-5">Next: Certifications</button>
           </div>
         </div>
       </section>
 
-      <!-- STEP 4: Review & Deploy -->
-      <section id="step-4" class="step hidden" aria-label="Review and Deploy">
+      <!-- STEP 5: Certifications -->
+      <section id="step-5" class="step hidden" aria-label="Certifications">
+        <div class="step-content">
+          <h1 class="step-title">Certifications</h1>
+          <p class="step-description">Add your certifications. You can always add more later by editing your repository.</p>
+          <div id="certs-list" class="projects-list"></div>
+          <button type="button" class="btn btn-outline btn-wide" id="btn-add-cert">+ Add Certification</button>
+          <div class="step-actions">
+            <button type="button" class="btn btn-ghost" id="btn-back-to-4">Back</button>
+            <button type="button" class="btn btn-primary" id="btn-to-step-6">Next: Review & Deploy</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 6: Review & Deploy -->
+      <section id="step-6" class="step hidden" aria-label="Review and Deploy">
         <div class="step-content">
           <h1 class="step-title">Review & Deploy</h1>
           <p class="step-description">Check your details below, then click Deploy to create your portfolio repository.</p>
           <div id="review-panel" class="review-panel"></div>
           <div class="step-actions">
-            <button type="button" class="btn btn-ghost" id="btn-back-to-3">Back</button>
+            <button type="button" class="btn btn-ghost" id="btn-back-to-5">Back</button>
             <button type="button" class="btn btn-primary btn-wide" id="btn-deploy">
               <span class="btn-text">Create My Portfolio</span>
               <span class="btn-spinner hidden" aria-hidden="true"></span>
@@ -215,6 +344,19 @@
         </div>
       </section>
 
+      <!-- EDIT SUCCESS SCREEN -->
+      <section id="screen-success-edit" class="step hidden" aria-label="Portfolio Updated">
+        <div class="step-content success-content">
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <h1 class="step-title">Portfolio Updated!</h1>
+          <p class="step-description">Your changes have been pushed to GitHub. Vercel will redeploy automatically within 60 seconds.</p>
+          <div class="success-card">
+            <h2>Your Repository</h2>
+            <a id="edit-success-repo-url" href="#" target="_blank" rel="noreferrer" class="success-link"></a>
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <div id="toast" class="toast hidden" role="alert" aria-live="assertive">
@@ -224,6 +366,70 @@
 
   </div>
 
+  <!-- Cert card template — hidden, cloned by JS -->
+  <template id="cert-card-template">
+    <div class="cert-card project-card">
+      <div class="project-card-header">
+        <h3 class="project-card-title">Certification <span class="cert-number"></span></h3>
+        <button type="button" class="btn-remove-cert btn-remove-project" aria-label="Remove certification">×</button>
+      </div>
+      <form class="form cert-form" novalidate style="padding:1rem">
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label">Certification Name <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" name="name" class="field-input" placeholder="Microsoft Power BI Data Analyst" required />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Issuing Organisation</label>
+            <input type="text" name="organisation" class="field-input" placeholder="Microsoft" />
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label">Year</label>
+            <input type="text" name="date" class="field-input" placeholder="2024" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Credential URL</label>
+            <input type="url" name="credentialUrl" class="field-input" placeholder="https://learn.microsoft.com/..." />
+          </div>
+        </div>
+      </form>
+    </div>
+  </template>
+
+  <!-- Job card template — hidden, cloned by JS -->
+  <template id="job-card-template">
+    <div class="job-card project-card">
+      <div class="project-card-header">
+        <h3 class="project-card-title">Job <span class="job-number"></span></h3>
+        <button type="button" class="btn-remove-job" aria-label="Remove job">×</button>
+      </div>
+      <form class="form job-form" novalidate>
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label">Job Title <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" name="title" class="field-input" placeholder="Senior Data Analyst" required />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Company <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" name="company" class="field-input" placeholder="Apex Analytics Group" required />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Duration</label>
+          <input type="text" name="duration" class="field-input" placeholder="Jan 2023 — Present" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Key Responsibilities</label>
+          <textarea name="responsibilities" class="field-input field-textarea" rows="4"
+            placeholder="One responsibility per line:&#10;Lead the design of Power BI dashboards used by 200+ stakeholders.&#10;Write and optimise complex SQL queries against large-scale databases."></textarea>
+          <p class="field-hint">One responsibility per line — these appear as bullet points on your portfolio.</p>
+        </div>
+      </form>
+    </div>
+  </template>
+
   <!-- Project card template — hidden, cloned by JS -->
   <template id="project-card-template">
     <div class="project-card">
@@ -232,6 +438,8 @@
         <button type="button" class="btn-remove-project" aria-label="Remove project">×</button>
       </div>
       <form class="form project-form" novalidate>
+
+        <!-- Basic info -->
         <div class="form-grid">
           <div class="field-group">
             <label class="field-label">Project Title <span class="required" aria-hidden="true">*</span></label>
@@ -248,39 +456,112 @@
             <input type="text" name="industry" class="field-input" placeholder="Energy / Utilities" />
           </div>
           <div class="field-group">
-            <label class="field-label">Duration</label>
-            <input type="text" name="duration" class="field-input" placeholder="4 weeks" />
+            <label class="field-label">GitHub Link</label>
+            <input type="url" name="githubUrl" class="field-input" placeholder="https://github.com/..." />
           </div>
         </div>
+
+        <!-- Thumbnail -->
+        <div class="field-group">
+          <label class="field-label">Project Thumbnail <span class="optional-label">(optional)</span></label>
+          <div class="thumb-upload-row">
+            <label class="btn-upload-thumb">
+              Choose Image
+              <input type="file" name="thumbnailFile" accept="image/*" style="display:none" />
+            </label>
+            <span class="thumb-filename">No file chosen</span>
+            <img class="thumb-preview" alt="Thumbnail preview" style="display:none" />
+          </div>
+          <p class="field-hint">Appears as the cover image above Project Summary on your portfolio page.</p>
+        </div>
+
+        <!-- Project Summary -->
+        <div class="project-section-label">Project Summary</div>
         <div class="field-group">
           <label class="field-label">Summary <span class="required" aria-hidden="true">*</span></label>
-          <textarea name="summary" class="field-input field-textarea" rows="2"
-            placeholder="One sentence describing the project and its business value." required></textarea>
+          <textarea name="summary" class="field-input field-textarea" rows="3"
+            placeholder="Describe the project, the problem you were solving, and the business context." required></textarea>
         </div>
+
+        <!-- Requirements -->
+        <div class="project-section-label">Requirements</div>
         <div class="field-group">
-          <label class="field-label">The Challenge</label>
-          <textarea name="challenge" class="field-input field-textarea" rows="3"
-            placeholder="What problem were you solving? What was the business context?"></textarea>
+          <label class="field-label">Requirements Overview</label>
+          <textarea name="requirements" class="field-input field-textarea" rows="3"
+            placeholder="What did the business or stakeholders need from this project?"></textarea>
         </div>
+
+        <!-- Build / SQL Script -->
+        <div class="project-section-label">Build</div>
         <div class="field-group">
           <label class="field-label">What I Built</label>
-          <textarea name="whatIBuilt" class="field-input field-textarea" rows="3"
-            placeholder="Describe the solution you designed and delivered."></textarea>
+          <textarea name="whatIBuilt1" class="field-input field-textarea" rows="3"
+            placeholder="Describe the first part of your build process — data modelling, ETL, or architecture decisions."></textarea>
         </div>
+
         <div class="field-group">
-          <label class="field-label">The Outcome</label>
-          <textarea name="outcome" class="field-input field-textarea" rows="2"
-            placeholder="What changed for the business after your work?"></textarea>
+          <label class="field-label">What I Built — Image <span class="optional-label">(optional)</span></label>
+          <div class="thumb-upload-row">
+            <label class="btn-upload-thumb">
+              Choose Image
+              <input type="file" name="whatIBuiltImage" accept="image/*" style="display:none" />
+            </label>
+            <span class="whatIBuilt-filename">No file chosen</span>
+            <img class="whatIBuilt-preview" alt="What I built image preview" style="display:none" />
+          </div>
+          <p class="field-hint">Screenshot or diagram of what you built — appears below your description on the portfolio.</p>
         </div>
+
+        <div class="code-block-group">
+          <div class="code-block-title-row">
+            <label class="field-label">Code <span class="optional-label">(optional)</span></label>
+            <input type="text" name="codeTitle" class="field-input code-title-input"
+              placeholder="e.g. SQL Script, Python Script, R Script" />
+          </div>
+          <textarea name="codeDescription" class="field-input field-textarea" rows="2"
+            placeholder="Briefly describe what this code does and why it matters."></textarea>
+          <textarea name="sqlSnippet" class="field-input field-textarea field-code" rows="6"
+            placeholder="Paste your code here — it will be displayed as a formatted code block."></textarea>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="code-block-group">
+          <div class="code-block-title-row">
+            <label class="field-label">Dashboard <span class="optional-label">(optional)</span></label>
+            <input type="text" name="dashboardTitle" class="field-input code-title-input"
+              placeholder="e.g. Power BI Dashboard, Tableau Dashboard" />
+          </div>
+          <textarea name="dashboardDescription" class="field-input field-textarea" rows="2"
+            placeholder="What does the dashboard show? Who uses it?"></textarea>
+        </div>
+
+        <!-- Dashboard Pages -->
+        <div class="project-section-label">Dashboard Pages <span class="optional-label">(optional)</span></div>
+        <p class="field-hint" style="margin-top:-0.5rem">Each page becomes a slide in the carousel on your portfolio. Add as many as you like.</p>
+        <div class="slides-list"></div>
+        <button type="button" class="btn-add-slide">+ Add Dashboard Page</button>
+
+        <!-- Project Outcome -->
+        <div class="project-section-label">Project Outcome</div>
         <div class="field-group">
-          <label class="field-label">Tools Used</label>
-          <input type="text" name="tools" class="field-input"
-            placeholder="SQL, Power BI, DAX (comma-separated)" />
+          <label class="field-label">Outcome</label>
+          <textarea name="outcome" class="field-input field-textarea" rows="3"
+            placeholder="What changed for the business after your work? Describe the result."></textarea>
         </div>
+
         <div class="field-group">
-          <label class="field-label">GitHub Link</label>
-          <input type="url" name="githubUrl" class="field-input" placeholder="https://github.com/..." />
+          <label class="field-label">Outcome Image <span class="optional-label">(optional)</span></label>
+          <div class="thumb-upload-row">
+            <label class="btn-upload-thumb">
+              Choose Image
+              <input type="file" name="outcomeImage" accept="image/*" style="display:none" />
+            </label>
+            <span class="outcome-filename">No file chosen</span>
+            <img class="outcome-preview" alt="Outcome image preview" style="display:none" />
+          </div>
+          <p class="field-hint">Appears below the outcome text on your portfolio page.</p>
         </div>
+
       </form>
     </div>
   </template>
