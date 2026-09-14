@@ -102,6 +102,15 @@ export async function updateFile(pat, fullName, filePath, content, sha) {
   }
 }
 
+async function getPublicFileSHA(pat, fullName, filename) {
+  const res = await fetch(`${API}/repos/${fullName}/contents/public/${filename}`, {
+    headers: headers(pat),
+  })
+  if (!res.ok) return null
+  const data = await res.json()
+  return data.sha
+}
+
 async function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -112,16 +121,16 @@ async function fileToBase64(file) {
 }
 
 export async function uploadPhoto(pat, fullName, file) {
-  const ext    = file.name.split(".").pop().toLowerCase()
-  const name   = `profile-photo.${ext}`
-  const base64 = await fileToBase64(file)
+  const ext     = file.name.split(".").pop().toLowerCase()
+  const name    = `profile-photo.${ext}`
+  const base64  = await fileToBase64(file)
+  const sha     = await getPublicFileSHA(pat, fullName, name)
+  const payload = { message: "chore: add profile photo", content: base64 }
+  if (sha) payload.sha = sha
   const res = await fetch(`${API}/repos/${fullName}/contents/public/${name}`, {
     method: "PUT",
     headers: headers(pat),
-    body: JSON.stringify({
-      message: "chore: add profile photo",
-      content: base64,
-    }),
+    body: JSON.stringify(payload),
   })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
@@ -131,14 +140,14 @@ export async function uploadPhoto(pat, fullName, file) {
 }
 
 export async function uploadResume(pat, fullName, file) {
-  const base64 = await fileToBase64(file)
+  const base64  = await fileToBase64(file)
+  const sha     = await getPublicFileSHA(pat, fullName, "resume.pdf")
+  const payload = { message: "chore: add resume", content: base64 }
+  if (sha) payload.sha = sha
   const res = await fetch(`${API}/repos/${fullName}/contents/public/resume.pdf`, {
     method: "PUT",
     headers: headers(pat),
-    body: JSON.stringify({
-      message: "chore: add resume",
-      content: base64,
-    }),
+    body: JSON.stringify(payload),
   })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
@@ -153,10 +162,13 @@ export async function uploadSkillIcons(pat, fullName, customSkills) {
     const slug     = skill.name.toLowerCase().replace(/[^a-z0-9]/g, "-")
     const filename = `skill-${slug}.${ext}`
     const base64   = await fileToBase64(skill.logoFile)
+    const sha      = await getPublicFileSHA(pat, fullName, filename)
+    const payload  = { message: "chore: add skill icon", content: base64 }
+    if (sha) payload.sha = sha
     const res = await fetch(`${API}/repos/${fullName}/contents/public/${filename}`, {
       method: "PUT",
       headers: headers(pat),
-      body: JSON.stringify({ message: "chore: add skill icon", content: base64 }),
+      body: JSON.stringify(payload),
     })
     if (!res.ok) {
       const body = await res.json().catch(() => ({}))
@@ -166,11 +178,14 @@ export async function uploadSkillIcons(pat, fullName, customSkills) {
 }
 
 async function putPublicFile(pat, fullName, filename, file, message) {
-  const base64 = await fileToBase64(file)
+  const base64  = await fileToBase64(file)
+  const sha     = await getPublicFileSHA(pat, fullName, filename)
+  const payload = { message, content: base64 }
+  if (sha) payload.sha = sha
   const res = await fetch(`${API}/repos/${fullName}/contents/public/${filename}`, {
     method: "PUT",
     headers: headers(pat),
-    body: JSON.stringify({ message, content: base64 }),
+    body: JSON.stringify(payload),
   })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))

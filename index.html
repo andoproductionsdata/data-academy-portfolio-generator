@@ -208,6 +208,7 @@
                   <span id="resume-filename" class="photo-filename">No file chosen</span>
                 </div>
                 <p class="field-hint">PDF only. Students can click "Download Resume" on the live portfolio to download it.</p>
+                <p id="edit-resume-hint" class="field-hint edit-file-hint hidden">A resume is already saved — only upload if you want to replace it.</p>
               </div>
             </div>
             <div class="field-group">
@@ -234,6 +235,7 @@
                   <img id="photo-preview" src="" alt="" class="photo-preview-thumb hidden" />
                 </div>
                 <p class="field-hint">JPG or PNG, max 5 MB. Your photo will be uploaded to your portfolio automatically.</p>
+                <p id="edit-photo-hint" class="field-hint edit-file-hint hidden">A photo is already saved — only upload if you want to replace it.</p>
               </div>
             </div>
             <div class="field-group">
@@ -349,10 +351,19 @@
         <div class="step-content success-content">
           <div class="success-icon" aria-hidden="true">✓</div>
           <h1 class="step-title">Portfolio Updated!</h1>
-          <p class="step-description">Your changes have been pushed to GitHub. Vercel will redeploy automatically within 60 seconds.</p>
+          <p class="step-description">Your changes have been pushed to GitHub.</p>
           <div class="success-card">
             <h2>Your Repository</h2>
             <a id="edit-success-repo-url" href="#" target="_blank" rel="noreferrer" class="success-link"></a>
+          </div>
+          <div class="success-card">
+            <h2>Check Your Vercel Deployment</h2>
+            <ol class="success-steps">
+              <li>Go to your <a href="https://vercel.com/dashboard" target="_blank" rel="noreferrer">Vercel Dashboard</a></li>
+              <li>Find your portfolio project and click into it</li>
+              <li>A new deployment triggers automatically — wait for the status to show <strong>Ready</strong> (usually 1–2 minutes)</li>
+              <li>Click <strong>Visit</strong> to see your updated live portfolio</li>
+            </ol>
           </div>
         </div>
       </section>

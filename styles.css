@@ -492,6 +492,23 @@ code {
 .toast-close  { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; padding: 0 0.25rem; margin-left: auto; }
 
 /* ── Mode Toggle ────────────────────────────────────────────────── */
+.edit-file-hint {
+  color: var(--primary);
+  font-style: italic;
+}
+
+.success-steps {
+  margin: 0.75rem 0 0 1.25rem;
+  padding: 0;
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.success-steps li {
+  margin-bottom: 0.25rem;
+}
+
 .mode-toggle {
   display: inline-flex;
   background: var(--surface-2);

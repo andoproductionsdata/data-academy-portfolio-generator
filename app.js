@@ -454,6 +454,9 @@ function populateFormsFromConfig(config) {
   document.getElementById("projects-list").innerHTML = ""
   document.getElementById("certs-list").innerHTML    = ""
 
+  document.getElementById("edit-photo-hint").classList.remove("hidden")
+  document.getElementById("edit-resume-hint").classList.remove("hidden")
+
   initWorkExperienceStep(workExperience || [])
   initProjectsStep(projects || [])
   initCertificationsStep(certifications || [])
