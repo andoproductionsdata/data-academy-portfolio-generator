@@ -239,7 +239,20 @@ document.getElementById("btn-add-cert").addEventListener("click", () => addCertC
 
 document.getElementById("btn-to-step-6").addEventListener("click", () => {
   collectCertifications()
-  renderReviewPanel(getState())
+  const state            = getState()
+  const repoNameOverride = state.mode === "edit" ? state.repoName : null
+  renderReviewPanel(state, repoNameOverride)
+
+  const step6Title    = document.querySelector("#step-6 .step-title")
+  const deployBtnText = document.querySelector("#btn-deploy .btn-text")
+  if (state.mode === "edit") {
+    step6Title.textContent    = "Review & Update"
+    deployBtnText.textContent = "Update My Portfolio"
+  } else {
+    step6Title.textContent    = "Review & Deploy"
+    deployBtnText.textContent = "Create My Portfolio"
+  }
+
   goToStep(6)
 })
 
@@ -258,13 +271,23 @@ document.getElementById("btn-deploy").addEventListener("click", async () => {
   const btn = document.getElementById("btn-deploy")
   setButtonLoading(btn, true)
   try {
-    const configJson  = generateConfigJson()
-    const repoName    = generateRepoName(state.profile.name)
-    const photoFile   = state.profilePhotoFile  || null
-    const resumeFile  = state.profileResumeFile || null
-    const repoUrl     = await deployPortfolio(state.pat, repoName, configJson, photoFile, resumeFile, state.customSkills, state.projects)
-    renderSuccessScreen(repoUrl)
-    goToStep(0)
+    const configJson = generateConfigJson()
+
+    if (state.mode === "edit") {
+      const fullName   = `${state.githubUser.login}/${state.repoName}`
+      const photoFile  = state.profilePhotoFile  || null
+      const resumeFile = state.profileResumeFile || null
+      const repoUrl    = await updatePortfolio(state.pat, fullName, configJson, photoFile, resumeFile, state.customSkills, state.projects)
+      renderEditSuccessScreen(repoUrl)
+      goToStep(0, "screen-success-edit")
+    } else {
+      const repoName   = generateRepoName(state.profile.name)
+      const photoFile  = state.profilePhotoFile  || null
+      const resumeFile = state.profileResumeFile || null
+      const repoUrl    = await deployPortfolio(state.pat, repoName, configJson, photoFile, resumeFile, state.customSkills, state.projects)
+      renderSuccessScreen(repoUrl)
+      goToStep(0)
+    }
   } catch (err) {
     showToast(err.message)
   } finally {
