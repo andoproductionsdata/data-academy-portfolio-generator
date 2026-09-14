@@ -1,5 +1,5 @@
 const API = "https://api.github.com"
-const TEMPLATE_OWNER = "andoproductionsdata"
+const TEMPLATE_OWNER = "andoproductionsdata"          // ← update after pushing template repo to GitHub
 const TEMPLATE_REPO  = "data-academy-portfolio-template"
 
 function headers(pat) {
@@ -20,6 +20,11 @@ export async function verifyPAT(pat) {
 }
 
 export async function createFromTemplate(pat, repoName) {
+  const checkRes = await fetch(`${API}/repos/${TEMPLATE_OWNER}/${TEMPLATE_REPO}`, { headers: headers(pat) })
+  if (!checkRes.ok) throw new Error(`Cannot reach template repo (${checkRes.status}): ${TEMPLATE_OWNER}/${TEMPLATE_REPO}`)
+  const templateData = await checkRes.json()
+  if (!templateData.is_template) throw new Error(`"Template repository" is not enabled on ${TEMPLATE_OWNER}/${TEMPLATE_REPO} — enable it in repo Settings.`)
+
   const res = await fetch(`${API}/repos/${TEMPLATE_OWNER}/${TEMPLATE_REPO}/generate`, {
     method: "POST",
     headers: headers(pat),
@@ -30,7 +35,10 @@ export async function createFromTemplate(pat, repoName) {
       include_all_branches: false,
     }),
   })
-  if (res.status === 404) throw new Error("Template repository not found. Contact your academy.")
+  if (res.status === 404) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(`404 from GitHub: ${body.message || "Template repository not found"} — repo: ${TEMPLATE_OWNER}/${TEMPLATE_REPO}`)
+  }
   if (res.status === 422) {
     const body = await res.json().catch(() => ({}))
     const msg = body.errors?.[0]?.message || ""
@@ -94,9 +102,140 @@ export async function updateFile(pat, fullName, filePath, content, sha) {
   }
 }
 
-export async function deployPortfolio(pat, repoName, configJson) {
+async function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload  = () => resolve(reader.result.split(",")[1])
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+}
+
+export async function uploadPhoto(pat, fullName, file) {
+  const ext    = file.name.split(".").pop().toLowerCase()
+  const name   = `profile-photo.${ext}`
+  const base64 = await fileToBase64(file)
+  const res = await fetch(`${API}/repos/${fullName}/contents/public/${name}`, {
+    method: "PUT",
+    headers: headers(pat),
+    body: JSON.stringify({
+      message: "chore: add profile photo",
+      content: base64,
+    }),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(body.message || `Failed to upload photo: ${res.status}`)
+  }
+  return `/${name}`
+}
+
+export async function uploadResume(pat, fullName, file) {
+  const base64 = await fileToBase64(file)
+  const res = await fetch(`${API}/repos/${fullName}/contents/public/resume.pdf`, {
+    method: "PUT",
+    headers: headers(pat),
+    body: JSON.stringify({
+      message: "chore: add resume",
+      content: base64,
+    }),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(body.message || `Failed to upload resume: ${res.status}`)
+  }
+}
+
+export async function uploadSkillIcons(pat, fullName, customSkills) {
+  for (const skill of customSkills) {
+    if (!skill.logoFile) continue
+    const ext      = skill.logoFile.name.split(".").pop().toLowerCase()
+    const slug     = skill.name.toLowerCase().replace(/[^a-z0-9]/g, "-")
+    const filename = `skill-${slug}.${ext}`
+    const base64   = await fileToBase64(skill.logoFile)
+    const res = await fetch(`${API}/repos/${fullName}/contents/public/${filename}`, {
+      method: "PUT",
+      headers: headers(pat),
+      body: JSON.stringify({ message: "chore: add skill icon", content: base64 }),
+    })
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}))
+      throw new Error(body.message || `Failed to upload icon for ${skill.name}`)
+    }
+  }
+}
+
+async function putPublicFile(pat, fullName, filename, file, message) {
+  const base64 = await fileToBase64(file)
+  const res = await fetch(`${API}/repos/${fullName}/contents/public/${filename}`, {
+    method: "PUT",
+    headers: headers(pat),
+    body: JSON.stringify({ message, content: base64 }),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(body.message || `Failed to upload ${filename}`)
+  }
+}
+
+async function uploadProjectAssets(pat, fullName, projects, configJson) {
+  const config = JSON.parse(configJson)
+  for (let i = 0; i < projects.length; i++) {
+    const p    = projects[i]
+    const slug = config.projects[i]?.slug || `project-${i + 1}`
+
+    if (p.thumbnailFile) {
+      const ext = p.thumbnailFile.name.split(".").pop().toLowerCase()
+      await putPublicFile(pat, fullName, `project-${slug}-thumb.${ext}`, p.thumbnailFile, `chore: add thumbnail for ${slug}`)
+    }
+
+    if (p.outcomeImageFile) {
+      const ext = p.outcomeImageFile.name.split(".").pop().toLowerCase()
+      await putPublicFile(pat, fullName, `project-${slug}-outcome.${ext}`, p.outcomeImageFile, `chore: add outcome image for ${slug}`)
+    }
+
+    if (p.whatIBuiltImageFile) {
+      const ext = p.whatIBuiltImageFile.name.split(".").pop().toLowerCase()
+      await putPublicFile(pat, fullName, `project-${slug}-build.${ext}`, p.whatIBuiltImageFile, `chore: add build image for ${slug}`)
+    }
+
+    for (let si = 0; si < (p.dashboardSlides ?? []).length; si++) {
+      const slide = p.dashboardSlides[si]
+      if (!slide.imageFile) continue
+      const ext = slide.imageFile.name.split(".").pop().toLowerCase()
+      await putPublicFile(pat, fullName, `project-${slug}-slide-${si + 1}.${ext}`, slide.imageFile, `chore: add slide ${si + 1} for ${slug}`)
+    }
+  }
+}
+
+export async function deployPortfolio(pat, repoName, configJson, photoFile = null, resumeFile = null, customSkills = [], projects = []) {
   const fullName = await createFromTemplate(pat, repoName)
   await waitForRepo(pat, fullName)
+  if (photoFile)            await uploadPhoto(pat, fullName, photoFile)
+  if (resumeFile)           await uploadResume(pat, fullName, resumeFile)
+  if (customSkills.length)  await uploadSkillIcons(pat, fullName, customSkills)
+  if (projects.length)      await uploadProjectAssets(pat, fullName, projects, configJson)
+  const sha = await getFileSHA(pat, fullName, "lib/portfolio-config.json")
+  await updateFile(pat, fullName, "lib/portfolio-config.json", configJson, sha)
+  return `https://github.com/${fullName}`
+}
+
+export async function fetchPortfolioConfig(pat, ownerLogin, repoName) {
+  const res = await fetch(
+    `${API}/repos/${ownerLogin}/${repoName}/contents/lib/portfolio-config.json`,
+    { headers: headers(pat) }
+  )
+  if (res.status === 404) throw new Error("Repository or config file not found — check the repo name and try again")
+  if (!res.ok) throw new Error(`Could not load portfolio config: ${res.status}`)
+  const data = await res.json()
+  return JSON.parse(atob(data.content.replace(/\n/g, "")))
+}
+
+export async function updatePortfolio(pat, fullName, configJson, photoFile = null, resumeFile = null, customSkills = [], projects = []) {
+  if (photoFile)           await uploadPhoto(pat, fullName, photoFile)
+  if (resumeFile)          await uploadResume(pat, fullName, resumeFile)
+  if (customSkills.length) await uploadSkillIcons(pat, fullName, customSkills)
+  if (projects.length)     await uploadProjectAssets(pat, fullName, projects, configJson)
   const sha = await getFileSHA(pat, fullName, "lib/portfolio-config.json")
   await updateFile(pat, fullName, "lib/portfolio-config.json", configJson, sha)
   return `https://github.com/${fullName}`
