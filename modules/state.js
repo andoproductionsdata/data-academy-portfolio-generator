@@ -5,6 +5,7 @@ const _state = {
   profileResumeFile: null,
   mode: "generate",   // "generate" | "edit"
   repoName: "",
+  existingConfig: null,
   profile: {
     name: "",
     role: "",

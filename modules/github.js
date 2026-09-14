@@ -242,8 +242,9 @@ export async function fetchPortfolioConfig(pat, ownerLogin, repoName) {
   )
   if (res.status === 404) throw new Error("Repository or config file not found — check the repo name and try again")
   if (!res.ok) throw new Error(`Could not load portfolio config: ${res.status}`)
-  const data = await res.json()
-  return JSON.parse(atob(data.content.replace(/\n/g, "")))
+  const data  = await res.json()
+  const bytes = Uint8Array.from(atob(data.content.replace(/\n/g, "")), c => c.charCodeAt(0))
+  return JSON.parse(new TextDecoder().decode(bytes))
 }
 
 export async function updatePortfolio(pat, fullName, configJson, photoFile = null, resumeFile = null, customSkills = [], projects = []) {

@@ -421,6 +421,7 @@ document.addEventListener("change", (e) => {
 // ── Edit mode: form population ───────────────────────────────────
 
 function populateFormsFromConfig(config) {
+  setState({ existingConfig: config })
   const { profile, about, technicalSkills, workExperience, projects, certifications } = config
 
   const set = (id, value) => {
