@@ -354,10 +354,15 @@ function makeSlideCard(number) {
   imageRow.appendChild(filename)
   imageRow.appendChild(preview)
 
+  const editHint = document.createElement("p")
+  editHint.className = "field-hint edit-img-hint hidden"
+  editHint.innerHTML = '<span class="edit-img-check">✓</span> Image on file — upload to replace'
+
   card.appendChild(header)
   card.appendChild(titleInput)
   card.appendChild(descTextarea)
   card.appendChild(imageRow)
+  card.appendChild(editHint)
   return card
 }
 

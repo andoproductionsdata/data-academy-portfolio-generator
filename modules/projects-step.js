@@ -143,6 +143,14 @@ export function addProjectCard(data = null) {
     set("outcome",              Array.isArray(data.outcome)
       ? data.outcome.join("\n\n") : (data.outcome ?? ""))
 
+    const showImgHint = (inputName) => {
+      const hint = card.querySelector(`[name="${inputName}"]`).closest(".field-group")?.querySelector(".edit-img-hint")
+      if (hint) hint.classList.remove("hidden")
+    }
+    if (data.preview && data.preview !== "/placeholder.svg") showImgHint("thumbnailFile")
+    if (data.buildImage)   showImgHint("whatIBuiltImage")
+    if (data.outcomeImage) showImgHint("outcomeImage")
+
     if (Array.isArray(data.customSections)) {
       data.customSections.forEach(section => {
         const row = makeCustomSectionRow()
@@ -165,6 +173,10 @@ export function addProjectCard(data = null) {
           : (slide.description ?? "")
         newSlide.querySelector('[name="slideTitle"]').value       = slide.title ?? ""
         newSlide.querySelector('[name="slideDescription"]').value = descText
+        if (slide.image) {
+          const hint = newSlide.querySelector(".edit-img-hint")
+          if (hint) hint.classList.remove("hidden")
+        }
       })
     }
   }

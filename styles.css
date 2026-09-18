@@ -496,9 +496,15 @@ code {
 .toast-close  { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; padding: 0 0.25rem; margin-left: auto; }
 
 /* ── Mode Toggle ────────────────────────────────────────────────── */
-.edit-file-hint {
-  color: var(--primary);
+.edit-file-hint,
+.edit-img-hint {
   font-style: italic;
+}
+
+.edit-img-check {
+  color: #22c55e;
+  font-style: normal;
+  font-weight: 600;
 }
 
 .success-steps {
