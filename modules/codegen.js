@@ -35,7 +35,7 @@ function toLines(raw) {
 }
 
 export function generateConfigJson() {
-  const { profile, profilePhotoFile, profileResumeFile, selectedSkills, customSkills, workExperience, projects, certifications, existingConfig } = getState()
+  const { profile, profilePhotoFile, profileResumeFile, selectedSkills, customSkills, workExperience, projects, certifications, existingConfig, theme } = getState()
 
   const photoUrl = profilePhotoFile
     ? `/profile-photo.${profilePhotoFile.name.split(".").pop().toLowerCase()}`
@@ -58,6 +58,7 @@ export function generateConfigJson() {
   ]
 
   const config = {
+    theme: theme || "purple",
     profile: {
       name:         profile.name || "Your Name",
       role:         "Data Analyst",

@@ -519,6 +519,35 @@ code {
   margin-bottom: 0.25rem;
 }
 
+/* ── Theme Swatches ─────────────────────────────────────────────── */
+.theme-swatches {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.theme-swatch {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.theme-swatch:hover { transform: scale(1.15); }
+
+.theme-swatch.active {
+  box-shadow: 0 0 0 2px var(--surface-2), 0 0 0 4px var(--text);
+}
+
+.theme-swatch[data-theme="purple"]    { background: oklch(0.62 0.19 275); }
+.theme-swatch[data-theme="dark-blue"] { background: oklch(0.58 0.20 230); }
+.theme-swatch[data-theme="green"]     { background: oklch(0.60 0.17 145); }
+.theme-swatch[data-theme="teal"]      { background: oklch(0.60 0.15 185); }
+.theme-swatch[data-theme="grey"]      { background: oklch(0.65 0.03 270); }
+
 .mode-toggle {
   display: inline-flex;
   background: var(--surface-2);

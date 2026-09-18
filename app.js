@@ -159,6 +159,18 @@ document.getElementById("form-auth").addEventListener("submit", async (e) => {
 
 document.getElementById("btn-back-to-1").addEventListener("click", () => goToStep(1))
 
+document.getElementById("theme-swatches").addEventListener("click", (e) => {
+  const btn = e.target.closest(".theme-swatch")
+  if (!btn) return
+  document.querySelectorAll(".theme-swatch").forEach(s => {
+    s.classList.remove("active")
+    s.setAttribute("aria-pressed", "false")
+  })
+  btn.classList.add("active")
+  btn.setAttribute("aria-pressed", "true")
+  setState({ theme: btn.dataset.theme })
+})
+
 document.getElementById("profile-photo-file").addEventListener("change", (e) => {
   const file = e.target.files[0]
   if (!file) return
@@ -459,6 +471,15 @@ function populateFormsFromConfig(config) {
   document.getElementById("jobs-list").innerHTML     = ""
   document.getElementById("projects-list").innerHTML = ""
   document.getElementById("certs-list").innerHTML    = ""
+
+  if (config.theme) {
+    setState({ theme: config.theme })
+    document.querySelectorAll(".theme-swatch").forEach(s => {
+      const active = s.dataset.theme === config.theme
+      s.classList.toggle("active", active)
+      s.setAttribute("aria-pressed", String(active))
+    })
+  }
 
   if (config.profile?.photoUrl && config.profile.photoUrl !== "/placeholder.svg")
     document.getElementById("edit-photo-hint").classList.remove("hidden")

@@ -6,6 +6,7 @@ const _state = {
   mode: "generate",   // "generate" | "edit"
   repoName: "",
   existingConfig: null,
+  theme: "purple",
   profile: {
     name: "",
     role: "",
