@@ -88,6 +88,9 @@ code {
 
 .progress-connector { width: 2rem; height: 1px; background: var(--border); flex-shrink: 0; }
 
+/* ── Utility ─────────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
 /* ── Step Container ─────────────────────────────────────────────── */
 .step-container { flex: 1; display: flex; justify-content: center; padding: 2rem 1rem; }
 .step { width: 100%; max-width: 720px; }
