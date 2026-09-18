@@ -106,6 +106,7 @@ code {
 @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
 
 .field-group  { display: flex; flex-direction: column; gap: 0.4rem; }
+.field-group.hidden { display: none; }
 .field-label  { font-size: 0.85rem; font-weight: 500; color: var(--text); }
 .required     { color: var(--error); margin-left: 2px; }
 
