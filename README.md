@@ -48,3 +48,10 @@ Students need a classic PAT with the `repo` scope (full control of private/publi
 - Skills, tools, and certifications sections use template defaults — students customise after deploy
 - One portfolio per name (repo is named `firstname-lastname-data-portfolio`)
 - No custom domains (students can add their own via Vercel free tier settings)
+
+NEXT STEPS
+- Next session roadmap:
+  a. Finish testing the full student flow end-to-end
+  b. Host the generator so students get a real URL (no local server)
+  c. Adjust the portfolio website design
+  d. Build a way for students to change their theme and location using Claude

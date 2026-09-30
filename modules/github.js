@@ -214,11 +214,44 @@ async function uploadProjectAssets(pat, fullName, projects, configJson) {
       await putPublicFile(pat, fullName, `project-${slug}-build.${ext}`, p.whatIBuiltImageFile, `chore: add build image for ${slug}`)
     }
 
-    for (let si = 0; si < (p.dashboardSlides ?? []).length; si++) {
-      const slide = p.dashboardSlides[si]
-      if (!slide.imageFile) continue
-      const ext = slide.imageFile.name.split(".").pop().toLowerCase()
-      await putPublicFile(pat, fullName, `project-${slug}-slide-${si + 1}.${ext}`, slide.imageFile, `chore: add slide ${si + 1} for ${slug}`)
+    for (let ci = 0; ci < (p.codeSections ?? []).length; ci++) {
+      const section = p.codeSections[ci]
+      if (!section.imageFile) continue
+      const ext = section.imageFile.name.split(".").pop().toLowerCase()
+      await putPublicFile(pat, fullName, `project-${slug}-code-${ci}.${ext}`, section.imageFile, `chore: add code section image for ${slug}`)
+    }
+
+    for (let di = 0; di < (p.dashboards ?? []).length; di++) {
+      const dashboard = p.dashboards[di]
+      for (let si = 0; si < (dashboard.slides ?? []).length; si++) {
+        const slide = dashboard.slides[si]
+        if (!slide.imageFile) continue
+        const ext = slide.imageFile.name.split(".").pop().toLowerCase()
+        await putPublicFile(pat, fullName, `project-${slug}-dash-${di}-slide-${si + 1}.${ext}`, slide.imageFile, `chore: add slide for dashboard ${di + 1} of ${slug}`)
+      }
+    }
+
+    for (let ci = 0; ci < (p.customSections ?? []).length; ci++) {
+      const section = p.customSections[ci]
+      if (!section.imageFile) continue
+      const ext = section.imageFile.name.split(".").pop().toLowerCase()
+      await putPublicFile(pat, fullName, `project-${slug}-custom-${ci}.${ext}`, section.imageFile, `chore: add custom section image for ${slug}`)
+    }
+
+    for (let ci = 0; ci < (p.customContent ?? []).length; ci++) {
+      const section = p.customContent[ci]
+      if (section.type === "text" || section.type === "code") {
+        if (!section.imageFile) continue
+        const ext = section.imageFile.name.split(".").pop().toLowerCase()
+        await putPublicFile(pat, fullName, `project-${slug}-cc-${ci}.${ext}`, section.imageFile, `chore: add custom content image for ${slug}`)
+      } else if (section.type === "dashboard") {
+        for (let si = 0; si < (section.slides ?? []).length; si++) {
+          const slide = section.slides[si]
+          if (!slide.imageFile) continue
+          const ext = slide.imageFile.name.split(".").pop().toLowerCase()
+          await putPublicFile(pat, fullName, `project-${slug}-cc-${ci}-slide-${si + 1}.${ext}`, slide.imageFile, `chore: add custom dashboard slide for ${slug}`)
+        }
+      }
     }
   }
 }

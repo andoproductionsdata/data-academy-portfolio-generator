@@ -1,16 +1,16 @@
-import { getState, setState } from "./modules/state.js"
-import { goToStep }          from "./modules/steps.js"
-import { validatePAT, validateProfile } from "./modules/validate.js"
-import { verifyPAT, deployPortfolio, fetchPortfolioConfig, updatePortfolio } from "./modules/github.js"
-import { generateConfigJson }           from "./modules/codegen.js"
+import { getState, setState } from "./modules/state.js?v=10"
+import { goToStep }          from "./modules/steps.js?v=10"
+import { validatePAT, validateProfile } from "./modules/validate.js?v=10"
+import { verifyPAT, deployPortfolio, fetchPortfolioConfig, updatePortfolio } from "./modules/github.js?v=10"
+import { generateConfigJson }           from "./modules/codegen.js?v=10"
 import {
   showToast, hideToast,
   setButtonLoading, setFieldError, clearFormErrors,
   renderReviewPanel, renderSuccessScreen, renderEditSuccessScreen, generateRepoName,
-} from "./modules/ui.js"
-import { addProjectCard, collectProjects, initProjectsStep }           from "./modules/projects-step.js"
-import { addJobCard, collectWorkExperience, initWorkExperienceStep }   from "./modules/work-experience-step.js"
-import { addCertCard, collectCertifications, initCertificationsStep }  from "./modules/certifications-step.js"
+} from "./modules/ui.js?v=10"
+import { addProjectCard, collectProjects, initProjectsStep }           from "./modules/projects-step.js?v=10"
+import { addJobCard, collectWorkExperience, initWorkExperienceStep }   from "./modules/work-experience-step.js?v=10"
+import { addCertCard, collectCertifications, initCertificationsStep }  from "./modules/certifications-step.js?v=10"
 
 // ── Skills checkboxes (rendered on boot) ────────────────────────
 const ALL_SKILLS = ["SQL","Power BI","Tableau","Python","Excel","Claude Code","Git","Power Automate","Copilot","Redshift","Salesforce","Jira"]
@@ -380,8 +380,8 @@ function makeSlideCard(number) {
 
 document.addEventListener("click", (e) => {
   if (e.target.matches(".btn-add-slide")) {
-    const projectCard = e.target.closest(".project-card")
-    const list = projectCard.querySelector(".slides-list")
+    const dashSection = e.target.closest(".dashboard-section-row")
+    const list = dashSection.querySelector(".slides-list")
     list.appendChild(makeSlideCard(list.children.length + 1))
   }
   if (e.target.matches(".btn-remove-slide")) {
@@ -407,6 +407,24 @@ document.addEventListener("change", (e) => {
 // ── Project image previews (thumbnail + outcome, delegated) ──────
 
 document.addEventListener("change", (e) => {
+  if (e.target.matches('input[name="codeSectionImage"]')) {
+    const file = e.target.files[0]
+    if (!file) return
+    const row = e.target.closest(".code-section-row")
+    row.querySelector(".code-section-preview").src = URL.createObjectURL(file)
+    row.querySelector(".code-section-preview").style.display = "block"
+    row.querySelector(".code-section-filename").textContent = file.name
+    return
+  }
+  if (e.target.matches('input[name="customSectionImage"]')) {
+    const file = e.target.files[0]
+    if (!file) return
+    const row = e.target.closest(".custom-section-row")
+    row.querySelector(".custom-section-preview").src = URL.createObjectURL(file)
+    row.querySelector(".custom-section-preview").style.display = "block"
+    row.querySelector(".custom-section-filename").textContent = file.name
+    return
+  }
   if (e.target.matches('input[name="outcomeImage"]')) {
     const file = e.target.files[0]
     if (!file) return

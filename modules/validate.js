@@ -11,7 +11,6 @@ export function validatePAT(value) {
 export function validateProfile(profile) {
   const errors = {}
   if (!profile.name?.trim()) errors.name = "Name is required"
-  if (!profile.role?.trim()) errors.role = "Job title is required"
   if (!profile.tagline?.trim()) errors.tagline = "Tagline is required"
   if (profile.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email)) {
     errors.email = "Enter a valid email address"

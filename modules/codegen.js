@@ -1,4 +1,4 @@
-import { getState } from "./state.js"
+import { getState } from "./state.js?v=4"
 
 const ALL_SKILLS = [
   { name: "SQL",            description: "Data cleaning, joins, CTEs, query optimisation",                           logo: "/logo-sql.png" },
@@ -35,7 +35,10 @@ function toLines(raw) {
 }
 
 export function generateConfigJson() {
-  const { profile, profilePhotoFile, profileResumeFile, selectedSkills, customSkills, workExperience, projects, certifications, existingConfig, theme } = getState()
+  const { profile, profilePhotoFile, profileResumeFile, selectedSkills, customSkills, workExperience, projects, certifications, existingConfig, theme: stateTheme } = getState()
+
+  const activeSwatchEl = document.querySelector(".theme-swatch.active")
+  const theme = stateTheme || (activeSwatchEl?.dataset?.theme) || "purple"
 
   const photoUrl = profilePhotoFile
     ? `/profile-photo.${profilePhotoFile.name.split(".").pop().toLowerCase()}`
@@ -108,17 +111,59 @@ export function generateConfigJson() {
         ? `/project-${slug}-outcome.${p.outcomeImageFile.name.split(".").pop().toLowerCase()}`
         : (existingProject?.outcomeImage || "")
 
-      const dashboardSlides = (p.dashboardSlides ?? []).map((s, si) => {
-        const existingSlide = existingProject?.dashboardSlides?.[si]
-        const ext           = s.imageFile ? s.imageFile.name.split(".").pop().toLowerCase() : null
-        const img           = ext
-          ? `/project-${slug}-slide-${si + 1}.${ext}`
-          : (existingSlide?.image || "")
-        return { title: s.title, description: s.description ? [s.description] : [], image: img }
+      const codeSections = (p.codeSections ?? []).map((s, ci) => {
+        const ext = s.imageFile ? s.imageFile.name.split(".").pop().toLowerCase() : null
+        const img = ext
+          ? `/project-${slug}-code-${ci}.${ext}`
+          : (existingProject?.codeSections?.[ci]?.image || "")
+        return { title: s.title || "", description: s.description || "", snippet: s.snippet || "", image: img }
       })
+
+      const dashboards = (p.dashboards ?? []).map((d, di) => {
+        const existingDash = existingProject?.dashboards?.[di]
+        return {
+          title:       d.title || "",
+          description: d.description || "",
+          slides: (d.slides ?? []).map((s, si) => {
+            const ext = s.imageFile ? s.imageFile.name.split(".").pop().toLowerCase() : null
+            const img = ext
+              ? `/project-${slug}-dash-${di}-slide-${si + 1}.${ext}`
+              : (existingDash?.slides?.[si]?.image || "")
+            return { title: s.title, description: s.description ? [s.description] : [], image: img }
+          }),
+        }
+      })
+
+      const customContent = (p.customContent ?? []).map((s, ci) => {
+        if (s.type === "text") {
+          const ext = s.imageFile ? s.imageFile.name.split(".").pop().toLowerCase() : null
+          const img = ext ? `/project-${slug}-cc-${ci}.${ext}` : (existingProject?.customContent?.[ci]?.image || "")
+          return { type: "text", title: s.title || "", content: s.content || "", image: img }
+        }
+        if (s.type === "code") {
+          const ext = s.imageFile ? s.imageFile.name.split(".").pop().toLowerCase() : null
+          const img = ext ? `/project-${slug}-cc-${ci}.${ext}` : (existingProject?.customContent?.[ci]?.image || "")
+          return { type: "code", title: s.title || "", description: s.description || "", snippet: s.snippet || "", image: img }
+        }
+        if (s.type === "dashboard") {
+          const existingDash = existingProject?.customContent?.[ci]
+          return {
+            type: "dashboard",
+            title: s.title || "",
+            description: s.description || "",
+            slides: (s.slides ?? []).map((sl, si) => {
+              const ext = sl.imageFile ? sl.imageFile.name.split(".").pop().toLowerCase() : null
+              const img = ext ? `/project-${slug}-cc-${ci}-slide-${si + 1}.${ext}` : (existingDash?.slides?.[si]?.image || "")
+              return { title: sl.title, description: sl.description ? [sl.description] : [], image: img }
+            }),
+          }
+        }
+        return null
+      }).filter(Boolean)
 
       return {
         slug,
+        projectMode:          p.projectMode || "template",
         title:                p.title || `Project ${i + 1}`,
         tools:                [],
         company:              p.company || "",
@@ -128,17 +173,20 @@ export function generateConfigJson() {
         summary:              p.summary || "",
         preview,
         challenge:            toParagraphs(p.summary),
-        requirements:         toParagraphs(p.requirements),
-        customSections:       (p.customSections ?? []).map(s => ({ title: s.title, content: s.content })),
+        customSections:       (p.customSections ?? []).map((s, ci) => {
+          const ext = s.imageFile ? s.imageFile.name.split(".").pop().toLowerCase() : null
+          const img = ext
+            ? `/project-${slug}-custom-${ci}.${ext}`
+            : (existingProject?.customSections?.[ci]?.image || "")
+          return { title: s.title, content: s.content, image: img }
+        }),
         keyDeliverables:      [],
         kpiTargets:           [],
         whatIBuilt:           toParagraphs(p.whatIBuilt1),
-        dashboardTitle:       p.dashboardTitle || "",
-        dashboardDescription: p.dashboardDescription || "",
-        dashboardSlides,
         buildImage,
-        sqlSnippet:           p.sqlSnippet || "",
-        sqlDescription:       p.codeDescription || "",
+        codeSections,
+        dashboards,
+        customContent,
         outcome:              toParagraphs(p.outcome),
         outcomeImage,
         impact:               [],

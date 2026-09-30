@@ -506,15 +506,15 @@
             placeholder="Describe the project, the problem you were solving, and the business context." required></textarea>
         </div>
 
-        <!-- Requirements -->
-        <div class="project-section-label">Requirements</div>
-        <div class="field-group">
-          <label class="field-label">Requirements Overview</label>
-          <textarea name="requirements" class="field-input field-textarea" rows="3"
-            placeholder="What did the business or stakeholders need from this project?"></textarea>
+        <!-- Mode toggle -->
+        <div class="project-mode-toggle">
+          <button type="button" class="mode-btn active" data-mode="custom">Custom</button>
+          <button type="button" class="mode-btn" data-mode="template">Template</button>
         </div>
 
-        <!-- Build / SQL Script -->
+        <!-- Template fields -->
+        <div class="template-fields hidden">
+
         <div class="project-section-label">Build</div>
         <div class="field-group">
           <label class="field-label">What I Built</label>
@@ -536,34 +536,22 @@
           <p class="field-hint edit-img-hint hidden"><span class="edit-img-check">✓</span> Image on file — upload to replace</p>
         </div>
 
-        <div class="code-block-group">
-          <div class="code-block-title-row">
-            <label class="field-label">Code <span class="optional-label">(optional)</span></label>
-            <input type="text" name="codeTitle" class="field-input code-title-input"
-              placeholder="e.g. SQL Script, Python Script, R Script" />
-          </div>
-          <textarea name="codeDescription" class="field-input field-textarea" rows="2"
-            placeholder="Briefly describe what this code does and why it matters."></textarea>
-          <textarea name="sqlSnippet" class="field-input field-textarea field-code" rows="6"
-            placeholder="Paste your code here — it will be displayed as a formatted code block."></textarea>
-        </div>
+        <!-- Code Sections -->
+        <div class="project-section-label">Code <span class="optional-label">(optional)</span></div>
+        <p class="field-hint" style="margin-top:-0.5rem">Add one or more code sections — SQL, Python, R, etc.</p>
+        <div class="code-sections-list"></div>
+        <button type="button" class="btn-add-code-section">+ Add Code Section</button>
 
-        <!-- Dashboard -->
-        <div class="code-block-group">
-          <div class="code-block-title-row">
-            <label class="field-label">Dashboard <span class="optional-label">(optional)</span></label>
-            <input type="text" name="dashboardTitle" class="field-input code-title-input"
-              placeholder="e.g. Power BI Dashboard, Tableau Dashboard" />
-          </div>
-          <textarea name="dashboardDescription" class="field-input field-textarea" rows="2"
-            placeholder="What does the dashboard show? Who uses it?"></textarea>
-        </div>
+        <!-- Custom Sections (template mode) -->
+        <div class="project-section-label">Custom Sections <span class="optional-label">(optional)</span></div>
+        <div class="custom-sections-list"></div>
+        <button type="button" class="btn-add-section">+ Add Custom Section</button>
 
-        <!-- Dashboard Pages -->
-        <div class="project-section-label">Dashboard Pages <span class="optional-label">(optional)</span></div>
-        <p class="field-hint" style="margin-top:-0.5rem">Each page becomes a slide in the carousel on your portfolio. Add as many as you like.</p>
-        <div class="slides-list"></div>
-        <button type="button" class="btn-add-slide">+ Add Dashboard Page</button>
+        <!-- Dashboard Sections -->
+        <div class="project-section-label">Dashboard <span class="optional-label">(optional)</span></div>
+        <p class="field-hint" style="margin-top:-0.5rem">Add one or more dashboards — Power BI, Tableau, etc.</p>
+        <div class="dashboard-sections-list"></div>
+        <button type="button" class="btn-add-dashboard-section">+ Add Dashboard Section</button>
 
         <!-- Project Outcome -->
         <div class="project-section-label">Project Outcome</div>
@@ -587,10 +575,25 @@
           <p class="field-hint edit-img-hint hidden"><span class="edit-img-check">✓</span> Image on file — upload to replace</p>
         </div>
 
+        </div><!-- end .template-fields -->
+
+        <!-- Custom content fields -->
+        <div class="custom-content-fields">
+          <div class="custom-content-list"></div>
+          <div class="section-picker-wrap">
+            <button type="button" class="btn-add-section-picker">+ Add Section</button>
+            <div class="section-picker hidden">
+              <button type="button" class="btn-pick-section" data-type="text">+ Custom Section</button>
+              <button type="button" class="btn-pick-section" data-type="code">+ Code Section</button>
+              <button type="button" class="btn-pick-section" data-type="dashboard">+ Dashboard Section</button>
+            </div>
+          </div>
+        </div>
+
       </form>
     </div>
   </template>
 
-  <script type="module" src="app.js"></script>
+  <script type="module" src="app.js?v=10"></script>
 </body>
 </html>
