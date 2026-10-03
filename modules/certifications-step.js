@@ -1,4 +1,4 @@
-import { setState } from "./state.js?v=3"
+import { setState } from "./state.js?v=11"
 
 const MAX_CERTS = 10
 

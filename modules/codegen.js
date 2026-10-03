@@ -1,4 +1,4 @@
-import { getState } from "./state.js?v=4"
+import { getState } from "./state.js?v=11"
 
 const ALL_SKILLS = [
   { name: "SQL",            description: "Data cleaning, joins, CTEs, query optimisation",                           logo: "/logo-sql.png" },
