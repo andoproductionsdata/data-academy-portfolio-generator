@@ -1,16 +1,16 @@
-import { getState, setState } from "./modules/state.js?v=10"
-import { goToStep }          from "./modules/steps.js?v=10"
-import { validatePAT, validateProfile } from "./modules/validate.js?v=10"
-import { verifyPAT, deployPortfolio, fetchPortfolioConfig, updatePortfolio } from "./modules/github.js?v=10"
-import { generateConfigJson }           from "./modules/codegen.js?v=10"
+import { getState, setState } from "./modules/state.js?v=11"
+import { goToStep }          from "./modules/steps.js?v=11"
+import { validatePAT, validateProfile } from "./modules/validate.js?v=11"
+import { verifyPAT, deployPortfolio, fetchPortfolioConfig, updatePortfolio } from "./modules/github.js?v=11"
+import { generateConfigJson }           from "./modules/codegen.js?v=11"
 import {
   showToast, hideToast,
   setButtonLoading, setFieldError, clearFormErrors,
   renderReviewPanel, renderSuccessScreen, renderEditSuccessScreen, generateRepoName,
-} from "./modules/ui.js?v=10"
-import { addProjectCard, collectProjects, initProjectsStep }           from "./modules/projects-step.js?v=10"
-import { addJobCard, collectWorkExperience, initWorkExperienceStep }   from "./modules/work-experience-step.js?v=10"
-import { addCertCard, collectCertifications, initCertificationsStep }  from "./modules/certifications-step.js?v=10"
+} from "./modules/ui.js?v=11"
+import { addProjectCard, collectProjects, initProjectsStep }           from "./modules/projects-step.js?v=11"
+import { addJobCard, collectWorkExperience, initWorkExperienceStep }   from "./modules/work-experience-step.js?v=11"
+import { addCertCard, collectCertifications, initCertificationsStep }  from "./modules/certifications-step.js?v=11"
 
 // ── Skills checkboxes (rendered on boot) ────────────────────────
 const ALL_SKILLS = ["SQL","Power BI","Tableau","Python","Excel","Claude Code","Git","Power Automate","Copilot","Redshift","Salesforce","Jira"]
@@ -273,6 +273,11 @@ document.getElementById("btn-to-step-6").addEventListener("click", () => {
 document.getElementById("btn-back-to-5").addEventListener("click", () => goToStep(5))
 
 document.getElementById("btn-deploy").addEventListener("click", async () => {
+  // Re-collect everything before deploying so navigation back/forward doesn't leave stale state
+  collectProjects()
+  collectWorkExperience()
+  collectCertifications()
+
   const state = getState()
   if (!state.pat) {
     showToast("Session expired — please restart and re-enter your token")
