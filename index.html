@@ -297,11 +297,17 @@
         </div>
       </section>
 
-      <!-- STEP 5: Certifications -->
-      <section id="step-5" class="step hidden" aria-label="Certifications">
+      <!-- STEP 5: Education & Certifications -->
+      <section id="step-5" class="step hidden" aria-label="Education and Certifications">
         <div class="step-content">
-          <h1 class="step-title">Certifications</h1>
-          <p class="step-description">Add your certifications. You can always add more later by editing your repository.</p>
+          <h1 class="step-title">Education & Certifications</h1>
+          <p class="step-description">Add your education and certifications. You can always add more later by editing your repository.</p>
+
+          <h2 class="section-subheading">Education</h2>
+          <div id="education-list" class="projects-list"></div>
+          <button type="button" class="btn btn-outline btn-wide" id="btn-add-education">+ Add Education</button>
+
+          <h2 class="section-subheading" style="margin-top:2rem">Certifications</h2>
           <div id="certs-list" class="projects-list"></div>
           <button type="button" class="btn btn-outline btn-wide" id="btn-add-cert">+ Add Certification</button>
           <div class="step-actions">
@@ -415,6 +421,41 @@
           <div class="field-group">
             <label class="field-label">Credential URL</label>
             <input type="url" name="credentialUrl" class="field-input" placeholder="https://learn.microsoft.com/..." />
+          </div>
+        </div>
+      </form>
+    </div>
+  </template>
+
+  <!-- Education card template — hidden, cloned by JS -->
+  <template id="education-card-template">
+    <div class="cert-card project-card">
+      <div class="project-card-header">
+        <h3 class="project-card-title">Education <span class="education-number"></span></h3>
+        <button type="button" class="btn-remove-education btn-remove-project" aria-label="Remove education">×</button>
+      </div>
+      <form class="form education-form" novalidate style="padding:1rem">
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label">Qualification <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" name="qualification" class="field-input" placeholder="Master of Data Science" required />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Institution</label>
+            <input type="text" name="institution" class="field-input" placeholder="Monash University" />
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label">Study Status</label>
+            <select name="status" class="field-input">
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Year <span class="optional-label">(optional)</span></label>
+            <input type="text" name="year" class="field-input" placeholder="e.g. 2027 (expected) or 2023 (completed)" />
           </div>
         </div>
       </form>

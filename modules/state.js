@@ -27,6 +27,7 @@ const _state = {
   workExperience: [],
   projects: [],
   certifications: [],
+  education: [],
 }
 
 export function getState() {

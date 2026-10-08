@@ -35,7 +35,7 @@ function toLines(raw) {
 }
 
 export function generateConfigJson() {
-  const { profile, profilePhotoFile, profileResumeFile, selectedSkills, customSkills, workExperience, projects, certifications, existingConfig, theme: stateTheme } = getState()
+  const { profile, profilePhotoFile, profileResumeFile, selectedSkills, customSkills, workExperience, projects, certifications, education, existingConfig, theme: stateTheme } = getState()
 
   const activeSwatchEl = document.querySelector(".theme-swatch.active")
   const theme = stateTheme || (activeSwatchEl?.dataset?.theme) || "purple"
@@ -90,6 +90,12 @@ export function generateConfigJson() {
       duration:         job.duration || "",
       type:             "Full-time",
       responsibilities: toLines(job.responsibilities),
+    })),
+    education: education.map(e => ({
+      qualification: e.qualification || "",
+      institution:   e.institution || "",
+      status:        e.status || "In Progress",
+      year:          e.year || "",
     })),
     certifications: certifications.length > 0
       ? certifications

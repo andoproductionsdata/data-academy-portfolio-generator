@@ -10,7 +10,7 @@ import {
 } from "./modules/ui.js?v=11"
 import { addProjectCard, collectProjects, initProjectsStep }           from "./modules/projects-step.js?v=11"
 import { addJobCard, collectWorkExperience, initWorkExperienceStep }   from "./modules/work-experience-step.js?v=11"
-import { addCertCard, collectCertifications, initCertificationsStep }  from "./modules/certifications-step.js?v=11"
+import { addCertCard, addEducationCard, collectCertifications, initCertificationsStep }  from "./modules/certifications-step.js?v=11"
 
 // ── Skills checkboxes (rendered on boot) ────────────────────────
 const ALL_SKILLS = ["SQL","Power BI","Tableau","Python","Excel","Claude Code","Git","Power Automate","Copilot","Redshift","Salesforce","Jira"]
@@ -247,6 +247,7 @@ document.getElementById("btn-to-step-5").addEventListener("click", () => {
 // ── Step 5: Certifications ───────────────────────────────────────
 
 document.getElementById("btn-back-to-4").addEventListener("click", () => goToStep(4))
+document.getElementById("btn-add-education").addEventListener("click", () => addEducationCard())
 document.getElementById("btn-add-cert").addEventListener("click", () => addCertCard())
 
 document.getElementById("btn-to-step-6").addEventListener("click", () => {
@@ -511,7 +512,7 @@ function populateFormsFromConfig(config) {
 
   initWorkExperienceStep(workExperience || [])
   initProjectsStep(projects || [])
-  initCertificationsStep(certifications || [])
+  initCertificationsStep(certifications || [], config.education || [])
 }
 
 // ── Boot ─────────────────────────────────────────────────────────
