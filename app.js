@@ -489,7 +489,7 @@ function populateFormsFromConfig(config) {
     .filter(s => !ALL_BUILT_IN.includes(s.name))
     .map(s => ({ name: s.name, description: s.description, logoFile: null }))
 
-  setState({ selectedSkills: selectedBuiltIn, customSkills: customFromConfig })
+  setState({ selectedSkills: configSkillNames, customSkills: customFromConfig })
   renderSkillsCheckboxes()
 
   document.getElementById("jobs-list").innerHTML     = ""
