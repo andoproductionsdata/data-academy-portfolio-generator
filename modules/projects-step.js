@@ -120,6 +120,10 @@ function makeCustomSectionRow() {
   content.rows = 3
   content.placeholder = "Your content here — describe the section in a few sentences or bullet points."
 
+  const contentHint = document.createElement("p")
+  contentHint.className = "field-hint"
+  contentHint.innerHTML = "Use <code>-</code> at the start of a line for bullet points e.g. <code>- First point</code>"
+
   const imageLabel = document.createElement("label")
   imageLabel.className = "field-label"
   imageLabel.style.marginTop = "0.5rem"
@@ -161,6 +165,7 @@ function makeCustomSectionRow() {
 
   row.appendChild(header)
   row.appendChild(content)
+  row.appendChild(contentHint)
   row.appendChild(imageLabel)
   row.appendChild(imageRow)
   row.appendChild(editHint)
@@ -195,6 +200,10 @@ function makeCodeSectionRow() {
   description.className = "field-input field-textarea"
   description.rows = 2
   description.placeholder = "Briefly describe what this code does and why it matters."
+
+  const descHint = document.createElement("p")
+  descHint.className = "field-hint"
+  descHint.innerHTML = "Use <code>-</code> at the start of a line for bullet points e.g. <code>- First point</code>"
 
   const snippet = document.createElement("textarea")
   snippet.name = "codeSectionSnippet"
@@ -243,6 +252,7 @@ function makeCodeSectionRow() {
 
   row.appendChild(titleRow)
   row.appendChild(description)
+  row.appendChild(descHint)
   row.appendChild(snippet)
   row.appendChild(imageLabel)
   row.appendChild(imageRow)

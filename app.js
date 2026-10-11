@@ -346,6 +346,10 @@ function makeSlideCard(number) {
   descTextarea.rows = 2
   descTextarea.placeholder = "What does this page show? What can users see or do here?"
 
+  const slideDescHint = document.createElement("p")
+  slideDescHint.className = "field-hint"
+  slideDescHint.innerHTML = "Use <code>-</code> at the start of a line for bullet points e.g. <code>- First point</code>"
+
   const fileInput = document.createElement("input")
   fileInput.type = "file"
   fileInput.name = "slideImage"
@@ -379,6 +383,7 @@ function makeSlideCard(number) {
   card.appendChild(header)
   card.appendChild(titleInput)
   card.appendChild(descTextarea)
+  card.appendChild(slideDescHint)
   card.appendChild(imageRow)
   card.appendChild(editHint)
   return card
