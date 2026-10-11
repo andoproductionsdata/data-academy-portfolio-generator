@@ -327,8 +327,8 @@ code {
   border: 1px solid var(--border);
 }
 
-.section-type-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 0.25rem; }
-.code-block-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.section-type-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 0.4rem; }
+.code-block-group { display: flex; flex-direction: column; gap: 0.85rem; }
 .code-block-title-row { display: flex; align-items: center; gap: 0.75rem; }
 .code-block-title-row .field-label { white-space: nowrap; margin: 0; }
 .code-title-input { flex: 1; }
@@ -350,7 +350,7 @@ code {
 .btn-add-slide:hover { color: var(--primary); border-color: var(--primary); }
 
 .slide-card {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
@@ -392,18 +392,20 @@ code {
 .btn-add-section:hover { color: var(--primary); border-color: var(--primary); }
 
 .custom-section-row {
-  margin-top: 0.75rem;
+  margin-top: 1.25rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+  padding-bottom: 0.75rem;
 }
 .custom-section-header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem;
   background: var(--surface-2);
   border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
 }
 .custom-section-header .field-input { flex: 1; font-weight: 600; font-size: 0.85rem; }
 .btn-remove-section {
