@@ -464,6 +464,7 @@ export function addProjectCard(data = null) {
       const dashRow = makeDashboardSectionRow()
       dashRow.querySelector('[name="dashboardSectionTitle"]').value       = dashboard.title ?? ""
       dashRow.querySelector('[name="dashboardSectionDescription"]').value = dashboard.description ?? ""
+      dashboardSectionsList.appendChild(dashRow)
       const slidesList  = dashRow.querySelector(".slides-list")
       const addSlideBtn = dashRow.querySelector(".btn-add-slide")
       ;(dashboard.slides ?? []).forEach(slide => {
@@ -479,7 +480,6 @@ export function addProjectCard(data = null) {
           if (hint) hint.classList.remove("hidden")
         }
       })
-      dashboardSectionsList.appendChild(dashRow)
     })
 
     // Populate custom content (custom mode)
@@ -501,6 +501,7 @@ export function addProjectCard(data = null) {
           row = makeDashboardSectionRow()
           row.querySelector('[name="dashboardSectionTitle"]').value       = section.title ?? ""
           row.querySelector('[name="dashboardSectionDescription"]').value = section.description ?? ""
+          customList.appendChild(row)
           const slidesList  = row.querySelector(".slides-list")
           const addSlideBtn = row.querySelector(".btn-add-slide")
           ;(section.slides ?? []).forEach(slide => {
@@ -516,6 +517,7 @@ export function addProjectCard(data = null) {
               if (hint) hint.classList.remove("hidden")
             }
           })
+          row = null
         }
         if (row) customList.appendChild(row)
       })
