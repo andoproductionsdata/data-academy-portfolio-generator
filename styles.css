@@ -327,6 +327,7 @@ code {
   border: 1px solid var(--border);
 }
 
+.section-type-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 0.25rem; }
 .code-block-group { display: flex; flex-direction: column; gap: 0.5rem; }
 .code-block-title-row { display: flex; align-items: center; gap: 0.75rem; }
 .code-block-title-row .field-label { white-space: nowrap; margin: 0; }

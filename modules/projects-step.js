@@ -95,6 +95,11 @@ function makeCustomSectionRow() {
   const row = document.createElement("div")
   row.className = "custom-section-row"
 
+  const typeLabel = document.createElement("p")
+  typeLabel.className = "section-type-label"
+  typeLabel.textContent = "Custom Section"
+  row.appendChild(typeLabel)
+
   const header = document.createElement("div")
   header.className = "custom-section-header"
 
@@ -175,6 +180,11 @@ function makeCustomSectionRow() {
 function makeCodeSectionRow() {
   const row = document.createElement("div")
   row.className = "code-section-row code-block-group"
+
+  const typeLabel = document.createElement("p")
+  typeLabel.className = "section-type-label"
+  typeLabel.textContent = "Code Section"
+  row.appendChild(typeLabel)
 
   const titleRow = document.createElement("div")
   titleRow.className = "code-block-title-row"
@@ -263,6 +273,11 @@ function makeCodeSectionRow() {
 function makeDashboardSectionRow() {
   const row = document.createElement("div")
   row.className = "dashboard-section-row code-block-group"
+
+  const typeLabel = document.createElement("p")
+  typeLabel.className = "section-type-label"
+  typeLabel.textContent = "Dashboard Section"
+  row.appendChild(typeLabel)
 
   const titleRow = document.createElement("div")
   titleRow.className = "code-block-title-row"
