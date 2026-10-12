@@ -1,6 +1,24 @@
 const API = "https://api.github.com"
-const TEMPLATE_OWNER = "andoproductionsdata"          // ← update after pushing template repo to GitHub
+const TEMPLATE_OWNER = "andoproductionsdata"
 const TEMPLATE_REPO  = "data-academy-portfolio-template"
+
+const SYNC_FILES = [
+  "app/globals.css",
+  "app/page.tsx",
+  "app/projects/[slug]/page.tsx",
+  "components/rich-text.tsx",
+  "components/dashboard-carousel.tsx",
+  "components/section-heading.tsx",
+  "components/site-header.tsx",
+  "components/sections/hero-section.tsx",
+  "components/sections/about-section.tsx",
+  "components/sections/projects-section.tsx",
+  "components/sections/skills-section.tsx",
+  "components/sections/certifications-section.tsx",
+  "components/sections/work-experience-section.tsx",
+  "components/sections/contact-section.tsx",
+  "lib/portfolio-data.ts",
+]
 
 function headers(pat) {
   return {
@@ -280,7 +298,39 @@ export async function fetchPortfolioConfig(pat, ownerLogin, repoName) {
   return JSON.parse(new TextDecoder().decode(bytes))
 }
 
+async function syncTemplateFiles(pat, fullName) {
+  for (const filePath of SYNC_FILES) {
+    try {
+      const templateRes = await fetch(`${API}/repos/${TEMPLATE_OWNER}/${TEMPLATE_REPO}/contents/${filePath}`, {
+        headers: headers(pat),
+      })
+      if (!templateRes.ok) continue
+      const templateData = await templateRes.json()
+      const content = templateData.content.replace(/\n/g, "")
+
+      const studentRes = await fetch(`${API}/repos/${fullName}/contents/${filePath}`, {
+        headers: headers(pat),
+      })
+      const payload = { message: "chore: sync latest template updates", content }
+      if (studentRes.ok) {
+        const studentData = await studentRes.json()
+        if (studentData.sha === templateData.sha) continue
+        payload.sha = studentData.sha
+      }
+
+      await fetch(`${API}/repos/${fullName}/contents/${filePath}`, {
+        method: "PUT",
+        headers: headers(pat),
+        body: JSON.stringify(payload),
+      })
+    } catch {
+      // non-fatal — skip this file and continue
+    }
+  }
+}
+
 export async function updatePortfolio(pat, fullName, configJson, photoFile = null, resumeFile = null, customSkills = [], projects = []) {
+  await syncTemplateFiles(pat, fullName)
   if (photoFile)           await uploadPhoto(pat, fullName, photoFile)
   if (resumeFile)          await uploadResume(pat, fullName, resumeFile)
   if (customSkills.length) await uploadSkillIcons(pat, fullName, customSkills)
